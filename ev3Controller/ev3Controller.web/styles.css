@@ -103,3 +103,8 @@ footer {
     display: inline-block;
     text-align: left;
 }
+
+.ev3CMD {
+    padding: 10px;
+    margin: 10px;
+}
