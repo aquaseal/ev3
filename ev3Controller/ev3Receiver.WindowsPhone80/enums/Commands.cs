@@ -1,6 +1,6 @@
-﻿namespace ev3Receiver.WindowsPhone80
+﻿namespace ev3Receiver.enums
 {
-    public enum ev3Commands
+    public enum Commands
     {
         forward,
         backward,
