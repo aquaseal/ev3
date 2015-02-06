@@ -60,8 +60,39 @@ namespace ev3Receiver.WindowsPhone80.SAL
             ConnectionStatus = Status.disconnected;
         }
 
+        public void ForwardCMD()
+        {
+            //brick.BatchCommand.StepMotorAtPower(OutputPort.A | OutputPort.B, 50, 30, false);
+            brick.BatchCommand.TurnMotorAtPower(OutputPort.A | OutputPort.B, 50);
+        }
+
+        public void BackwardCMD()
+        {
+            //brick.BatchCommand.StepMotorAtPower(OutputPort.A | OutputPort.B, -50, 30, false);
+            brick.BatchCommand.TurnMotorAtPower(OutputPort.A | OutputPort.B, -50);
+        }
+
+        public void ClockwiseCMD()
+        {
+            // assumes port A is connected to the left motor when the robot is facing forward
+            //brick.BatchCommand.StepMotorAtPower(OutputPort.A, -50, 30, false);
+            brick.BatchCommand.TurnMotorAtPower(OutputPort.A, 30);
+        }
+
+        public void CounterClockwiseCMD()
+        {
+            // assumes port B is connected to the left motor when the robot is facing forward
+            //brick.BatchCommand.StepMotorAtPower(OutputPort.B, -50, 30, false);
+            brick.BatchCommand.TurnMotorAtPower(OutputPort.B, -30);
+        }
+
+        public async void ExecuteCommands()
+        {
+            await brick.BatchCommand.SendCommandAsync();
+        }
+
         // todo have the commandQueue here and send them via a BatchCommand with SendCommandAsync
-        
+
         private Brick brick;
         private Status connectionStatus;
         private bool tryToConnect = true;

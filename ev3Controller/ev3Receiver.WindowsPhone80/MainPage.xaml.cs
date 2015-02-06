@@ -19,6 +19,7 @@ namespace ev3Receiver.WindowsPhone80
 
         private async void BrickService_ConnectionStatusChanged(object sender, Status brickStatus)
         {
+            this.brickStatus = brickStatus;
             statusTextBlock.Text = brickStatus.ToString();
 
             try
@@ -39,13 +40,47 @@ namespace ev3Receiver.WindowsPhone80
 
                 // if we are connected to the EV3, start querying the mobile service for commands
                 if (brickStatus == Status.connected)
-                {
-                    // todo ... when i execute a command to the robot and it works, pull it off the queue and get the next
-                }
+                    queryForCommands();
             }
             catch (Exception e)
             {
             }
+        }
+
+        /// <summary>
+        /// query the azure mobile service for any EV3 commands that may be in the table
+        /// </summary>
+        private async void queryForCommands()
+        {
+            if (brickStatus != Status.connected)
+                return;
+
+            commandsTextBlock.Text = string.Empty;
+            var allEV3Commands = await ev3CommandsTable.IncludeTotalCount().ToListAsync();
+
+            // queue up commands to send to the EV3
+            foreach (EV3Commands command in allEV3Commands)
+            {
+                commandsTextBlock.Text += command.CMD + "\n";
+
+                if (command.CMD == Commands.forward.ToString())
+                    brickService.ForwardCMD();
+                else if (command.CMD == Commands.backward.ToString())
+                    brickService.BackwardCMD();
+                else if (command.CMD == Commands.clockwise.ToString())
+                    brickService.ClockwiseCMD();
+                else if (command.CMD == Commands.counterClockwise.ToString())
+                    brickService.CounterClockwiseCMD();
+
+                // remove the command from the mobile service
+                await ev3CommandsTable.DeleteAsync(command);
+            }
+
+            if (allEV3Commands.Count > 0)
+                brickService.ExecuteCommands();
+
+            //todo do we need to break out of this loop
+            queryForCommands();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -55,7 +90,7 @@ namespace ev3Receiver.WindowsPhone80
             brickService.Connect();
 
             ev3StatusTable = AzureService.MobileService.GetTable<EV3Status>();
-
+            ev3CommandsTable = AzureService.MobileService.GetTable<EV3Commands>();
             base.OnNavigatedTo(e);
         }
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
@@ -67,6 +102,7 @@ namespace ev3Receiver.WindowsPhone80
 
         private BrickService brickService;
         private IMobileServiceTable<EV3Status> ev3StatusTable;
-
+        private IMobileServiceTable<EV3Commands> ev3CommandsTable;
+        private Status brickStatus;
     }
 }
