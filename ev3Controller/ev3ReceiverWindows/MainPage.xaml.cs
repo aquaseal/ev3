@@ -1,20 +1,36 @@
 ﻿using ev3Receiver.enums;
 using ev3Receiver.Model;
 using ev3Receiver.SAL;
-using Microsoft.Phone.Controls;
 using Microsoft.WindowsAzure.MobileServices;
 using System;
-using System.Windows.Navigation;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Navigation;
 
-namespace ev3Receiver.WindowsPhone80
+// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
+
+namespace ev3ReceiverWindows
 {
-    public partial class MainPage : PhoneApplicationPage
+    /// <summary>
+    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// </summary>
+    public sealed partial class MainPage : Page
     {
-        // Constructor
         public MainPage()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
+
 
         private async void BrickService_ConnectionStatusChanged(object sender, Status brickStatus)
         {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ev3Receiver.WindowsPhone80.Model
+namespace ev3Receiver.Model
 {
     public class EV3Status
     {

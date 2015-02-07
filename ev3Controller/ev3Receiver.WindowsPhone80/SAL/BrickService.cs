@@ -1,9 +1,13 @@
 ﻿using ev3Receiver.enums;
 using Lego.Ev3.Core;
+#if NETFX_CORE
+using Lego.Ev3.WinRT;
+#elif WINDOWS_PHONE
 using Lego.Ev3.Phone;
+#endif
 using System;
 
-namespace ev3Receiver.WindowsPhone80.SAL
+namespace ev3Receiver.SAL
 {
     public class BrickService
     {
