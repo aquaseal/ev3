@@ -70,25 +70,23 @@ namespace ev3ReceiverWindows
             if (brickStatus != Status.connected)
                 return;
 
-            commandsTextBlock.Text = string.Empty;
             var allEV3Commands = await ev3CommandsTable.IncludeTotalCount().ToListAsync();
 
-            // queue up commands to send to the EV3
-            foreach (EV3Commands command in allEV3Commands)
+            if (allEV3Commands.Count > 0)
             {
-                commandsTextBlock.Text += command.CMD + "\n";
+                commandsTextBlock.Text += "\nnext batch: \n";
 
-                if (command.CMD == Commands.forward.ToString())
-                    brickService.ForwardCMD();
-                else if (command.CMD == Commands.backward.ToString())
-                    brickService.BackwardCMD();
-                else if (command.CMD == Commands.clockwise.ToString())
-                    brickService.ClockwiseCMD();
-                else if (command.CMD == Commands.counterClockwise.ToString())
-                    brickService.CounterClockwiseCMD();
+                // queue up commands to send to the EV3 one at a time
+                brickService.ExecuteCommands(allEV3Commands);
 
-                // remove the command from the mobile service
-                await ev3CommandsTable.DeleteAsync(command);
+                // queue up commands to send to the EV3
+                foreach (EV3Commands command in allEV3Commands)
+                {
+                    commandsTextBlock.Text += command.CMD + "\n";
+
+                    // remove the command from the mobile service
+                    await ev3CommandsTable.DeleteAsync(command);
+                }
             }
 
             //todo do we need to break out of this loop

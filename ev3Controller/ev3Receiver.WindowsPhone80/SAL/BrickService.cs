@@ -6,6 +6,8 @@ using Lego.Ev3.WinRT;
 using Lego.Ev3.Phone;
 #endif
 using System;
+using System.Collections.Generic;
+using ev3Receiver.Model;
 
 namespace ev3Receiver.SAL
 {
@@ -91,6 +93,34 @@ namespace ev3Receiver.SAL
             // assumes port B is connected to the left motor when the robot is facing forward
             await brick.DirectCommand.StepMotorAtPowerAsync(OutputPort.B, 50, 0, 360, 0, false);
             await brick.DirectCommand.WaitOutputReadyAsync(OutputPort.B);
+        }
+
+        public async void ExecuteCommands(List<EV3Commands> commands)
+        {
+            foreach (EV3Commands command in commands)
+            {
+
+                if (command.CMD == Commands.forward.ToString())
+                {
+                    await brick.DirectCommand.StepMotorAtPowerAsync(OutputPort.A | OutputPort.B, 50, 0, 360, 0, false);
+                    await brick.DirectCommand.WaitOutputReadyAsync(OutputPort.A | OutputPort.B);
+                }
+                else if (command.CMD == Commands.backward.ToString())
+                {
+                    await brick.DirectCommand.StepMotorAtPowerAsync(OutputPort.A | OutputPort.B, -50, 0, 360, 0, false);
+                    await brick.DirectCommand.WaitOutputReadyAsync(OutputPort.A | OutputPort.B);
+                }
+                else if (command.CMD == Commands.clockwise.ToString())
+                {
+                    await brick.DirectCommand.StepMotorAtPowerAsync(OutputPort.A, 50, 0, 360, 0, false);
+                    await brick.DirectCommand.WaitOutputReadyAsync(OutputPort.A);
+                }
+                else if (command.CMD == Commands.counterClockwise.ToString())
+                {
+                    await brick.DirectCommand.StepMotorAtPowerAsync(OutputPort.B, 50, 0, 360, 0, false);
+                    await brick.DirectCommand.WaitOutputReadyAsync(OutputPort.B);
+                }
+            }
         }
 
         private Brick brick;

@@ -28,6 +28,10 @@ $(function () {
             $('#commandList').empty().append(listItems).toggle(listItems.length > 0);
             $('#summary').html('<strong>' + commands.length + '</strong> item(s)');
         }, handleError);
+
+        setTimeout(function () {
+            refreshCommandList();
+        }, 500);
     }
 
     refreshCommandList();
