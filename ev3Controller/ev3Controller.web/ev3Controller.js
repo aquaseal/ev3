@@ -13,6 +13,23 @@ $(function () {
         ev3CommandsTable.insert({ cmd: cmd }).then(refreshCommandList, handleError);
     });
 
+    // manual refresh
+    $(".ev3CMDListRefresh").click(function (event) {
+        refreshCommandList();
+    });
+
+    // delete
+    $(".ev3DeleteCMDList").click(function (event) {
+        var query = ev3CommandsTable.select("id").read().done(function (results) {
+            for (var i = 0; i < results.length; i++) {
+                ev3CommandsTable.del({ id: results[i].id });
+            }
+
+            $('#commandList').empty();
+            $('#summary').html('<strong>' + 0 + '</strong> item(s)');
+        }, handleError)
+    });
+
     // list all commands
     function refreshCommandList() {
         //var query = ev3CommandsTable.where({ executed: false });
@@ -29,9 +46,6 @@ $(function () {
             $('#summary').html('<strong>' + commands.length + '</strong> item(s)');
         }, handleError);
 
-        setTimeout(function () {
-            refreshCommandList();
-        }, 500);
     }
 
     refreshCommandList();
