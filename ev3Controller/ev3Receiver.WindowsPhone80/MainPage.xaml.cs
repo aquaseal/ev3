@@ -75,9 +75,6 @@ namespace ev3Receiver.WindowsPhone80
                 await ev3CommandsTable.DeleteAsync(command);
             }
 
-            if (allEV3Commands.Count > 0)
-                brickService.ExecuteCommands();
-
             //todo do we need to break out of this loop
             queryForCommands();
         }

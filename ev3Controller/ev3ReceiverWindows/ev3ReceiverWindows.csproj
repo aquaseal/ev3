@@ -152,9 +152,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Lego.Ev3">
-      <HintPath>..\packages\Lego.Ev3.1.0.0\lib\netcore451\Lego.Ev3.winmd</HintPath>
-    </Reference>
     <Reference Include="Microsoft.WindowsAzure.Mobile">
       <HintPath>..\packages\WindowsAzure.MobileServices.1.3.1\lib\netcore45\Microsoft.WindowsAzure.Mobile.dll</HintPath>
     </Reference>
@@ -171,7 +168,12 @@
       <HintPath>..\packages\Microsoft.Net.Http.2.2.28\lib\win8\System.Net.Http.Primitives.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\legoEV3\Lego.Ev3.WinRT\Lego.Ev3.WinRT.csproj">
+      <Project>{c38c0a71-82d2-4979-b737-990026313f82}</Project>
+      <Name>Lego.Ev3.WinRT</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>
   </PropertyGroup>

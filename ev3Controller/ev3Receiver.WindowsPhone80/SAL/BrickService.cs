@@ -29,8 +29,11 @@ namespace ev3Receiver.SAL
 
         public BrickService()
         {
+#if !WINDOWS_PHONE
             brick = new Brick(new UsbCommunication());
-
+#else
+            brick = new Brick(new BluetoothCommunication());
+#endif
             if (ConnectionStatusChanged != null)
                 ConnectionStatusChanged(this, ConnectionStatus);
 
@@ -64,38 +67,31 @@ namespace ev3Receiver.SAL
             ConnectionStatus = Status.disconnected;
         }
 
-        public void ForwardCMD()
+        public async void ForwardCMD()
         {
-            //brick.BatchCommand.StepMotorAtPower(OutputPort.A | OutputPort.B, 50, 30, false);
-            brick.BatchCommand.TurnMotorAtPower(OutputPort.A | OutputPort.B, 50);
+            await brick.DirectCommand.StepMotorAtPowerAsync(OutputPort.A | OutputPort.B, 50, 0, 360, 0, false);
+            await brick.DirectCommand.WaitOutputReadyAsync(OutputPort.A | OutputPort.B);
         }
 
-        public void BackwardCMD()
+        public async void BackwardCMD()
         {
-            //brick.BatchCommand.StepMotorAtPower(OutputPort.A | OutputPort.B, -50, 30, false);
-            brick.BatchCommand.TurnMotorAtPower(OutputPort.A | OutputPort.B, -50);
+            await brick.DirectCommand.StepMotorAtPowerAsync(OutputPort.A | OutputPort.B, -50, 0, 360, 0, false);
+            await brick.DirectCommand.WaitOutputReadyAsync(OutputPort.A | OutputPort.B);
         }
 
-        public void ClockwiseCMD()
+        public async void ClockwiseCMD()
         {
             // assumes port A is connected to the left motor when the robot is facing forward
-            //brick.BatchCommand.StepMotorAtPower(OutputPort.A, -50, 30, false);
-            brick.BatchCommand.TurnMotorAtPower(OutputPort.A, 30);
+            await brick.DirectCommand.StepMotorAtPowerAsync(OutputPort.A, 50, 0, 360, 0, false);
+            await brick.DirectCommand.WaitOutputReadyAsync(OutputPort.A);
         }
 
-        public void CounterClockwiseCMD()
+        public async void CounterClockwiseCMD()
         {
             // assumes port B is connected to the left motor when the robot is facing forward
-            //brick.BatchCommand.StepMotorAtPower(OutputPort.B, -50, 30, false);
-            brick.BatchCommand.TurnMotorAtPower(OutputPort.B, -30);
+            await brick.DirectCommand.StepMotorAtPowerAsync(OutputPort.B, 50, 0, 360, 0, false);
+            await brick.DirectCommand.WaitOutputReadyAsync(OutputPort.B);
         }
-
-        public async void ExecuteCommands()
-        {
-            await brick.BatchCommand.SendCommandAsync();
-        }
-
-        // todo have the commandQueue here and send them via a BatchCommand with SendCommandAsync
 
         private Brick brick;
         private Status connectionStatus = Status.unknown;
