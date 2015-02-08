@@ -29,7 +29,7 @@ namespace ev3Receiver.SAL
 
         public BrickService()
         {
-            brick = new Brick(new BluetoothCommunication());
+            brick = new Brick(new UsbCommunication());
 
             if (ConnectionStatusChanged != null)
                 ConnectionStatusChanged(this, ConnectionStatus);
@@ -98,7 +98,7 @@ namespace ev3Receiver.SAL
         // todo have the commandQueue here and send them via a BatchCommand with SendCommandAsync
 
         private Brick brick;
-        private Status connectionStatus;
+        private Status connectionStatus = Status.unknown;
         private bool tryToConnect = true;
     }
 }
